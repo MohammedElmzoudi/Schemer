@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart'; // Import the Flutter Material Design package.
-import 'package:github/github.dart';
 import 'package:file_picker/file_picker.dart';
  
-import 'src/folder_explorer_page.dart';
+import 'src/project_dashboard.dart';
 
 
 void main() {
@@ -50,7 +49,7 @@ class MyHomePage extends StatelessWidget {
                 String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
                 if (selectedDirectory != null) {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => FolderExplorerPage(folderPath: selectedDirectory),
+                    builder: (context) => ProjectDashboard(folderPath: selectedDirectory),
                   ));
                 }
               },
