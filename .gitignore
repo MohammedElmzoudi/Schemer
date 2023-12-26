@@ -1,3 +1,5 @@
+lib/github_oauth_credentials.dart
+
 # Miscellaneous
 *.class
 *.log
@@ -41,3 +43,5 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+lib/src/github_login.dart
+lib/src/github_summary.dart
