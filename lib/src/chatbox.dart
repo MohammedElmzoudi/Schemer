@@ -3,32 +3,55 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ChatBox extends StatefulWidget {
-  const ChatBox({super.key});
+  final List<Map<String, dynamic>> messages;
+  final Function(List<Map<String, dynamic>>) updateProjectMessages; // New callback function
+
+  const ChatBox({super.key, required this.messages, required this.updateProjectMessages});
+
   @override
   ChatBoxState createState() => ChatBoxState();
 }
 
+
 class ChatBoxState extends State<ChatBox> {
   final TextEditingController _controller = TextEditingController();
   String _response = '';
+
   List<Map<String, dynamic>> messages = []; // List to hold messages
   bool _isTextboxHovering = false;
   
+
+  @override
+  void initState() {
+    super.initState();
+    messages = widget.messages;
+  }
+
+  // Called whenever widget configuration changes. Build is called after automatically
+  @override
+  void didUpdateWidget(ChatBox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.messages != widget.messages) {
+      messages = widget.messages;
+    }
+  }
+
   void _sendMessage() async {
     final String userInput = _controller.text;
     if (userInput.isNotEmpty) {
-      // Mock response for demonstration purposes
-      // Replace with actual HTTP request in production
       setState(() {
         messages.add({
           'text': userInput,
           'isUser': true,
         });
         _response = "Echo: $userInput";
-        _controller.clear(); // Clear the input field after sending the message
+        _controller.clear();
+        // Update the project messages in ProjectDashboard
+        widget.updateProjectMessages(messages);
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

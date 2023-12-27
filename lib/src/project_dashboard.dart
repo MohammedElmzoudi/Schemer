@@ -20,6 +20,7 @@ class _ProjectDashboardState extends State<ProjectDashboard> {
   late FocusNode renameFocusNode; // To ensure that the textfield for renaming automatically appears
   late Offset _tapPosition;
   Map<String, Set<String>> selectedFiles = {};
+  Map<String, List<Map<String, dynamic>>> projectMessages = {};
 
   @override
   void initState() {
@@ -62,6 +63,8 @@ class _ProjectDashboardState extends State<ProjectDashboard> {
                 setState(() {
                   selectedProjectIndx = index;
                 });
+                // Add/Retrieve messages for the selected project
+                projectMessages.putIfAbsent(projectNames[index], () => <Map<String, dynamic>>[]);
                 //Navigator.of(context).pop();
               }
             },
@@ -151,6 +154,11 @@ class _ProjectDashboardState extends State<ProjectDashboard> {
       });
     }
   }
+  void updateProjectMessages(List<Map<String, dynamic>> newMessages) {
+    setState(() {
+      projectMessages[projectNames[selectedProjectIndx]] = newMessages;
+    });
+  }
 
   Directory getSelectedDir(){
     return projectDirectories[selectedProjectIndx];
@@ -235,7 +243,12 @@ class _ProjectDashboardState extends State<ProjectDashboard> {
               decoration: const BoxDecoration(
                 color: Color.fromRGBO(0, 63, 155, 1), // Chat background color
               ),
-              child: const ChatBox(),
+              child: ChatBox(
+                messages: projectMessages[projectNames[selectedProjectIndx]] ?? [],
+                updateProjectMessages: (newMessages) {
+                  updateProjectMessages(newMessages);
+                },
+              ),
             )
           : const Text('Select a codebase to work with from the drawer'),
       ),
